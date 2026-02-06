@@ -3,19 +3,14 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+from LoanClassificationNN import LoanClassificationNN
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import DataLoader, TensorDataset
+from utils.device import device_detection
 
-# devise detection
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-elif torch.backends.mps.is_available():
-    device = torch.device("mps")
-else:
-    device = torch.device("cpu")
+device = device_detection()
 
 df = pd.read_csv("cleaned_data.csv")
 
@@ -43,26 +38,11 @@ test_data_loader = DataLoader(
 )
 
 
-class LoanClassificationNN(nn.Module):
-    def __init__(self, num_features, hidden_features1=20, hidden_features2=10):
-        super().__init__()
-        self.layer1 = nn.Linear(num_features, hidden_features1)
-        self.layer2 = nn.Linear(hidden_features1, hidden_features2)
-        self.layer3 = nn.Linear(hidden_features2, 1)
-        # self.sigmoid = nn.Sigmoid()
-
-    def forward(self, x):
-        x = F.relu(self.layer1(x))
-        x = F.relu(self.layer2(x))
-        x = self.layer3(x)
-        return x
-
-
 model = LoanClassificationNN(num_features=X_train_t.shape[1]).to(device)
 loss_fn = nn.BCEWithLogitsLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
-num_epochs = 4
+num_epochs = 10
 train_losses = []
 test_losses = []
 train_correct = []
@@ -112,6 +92,7 @@ for epoch in range(num_epochs):
     print(
         f"Epoch {epoch} - Training accuracy: {trn_corr * 100 / len(X_train_np):.2f}%, Test accuracy: {tst_corr * 100 / len(X_test_np):.2f}%"
     )
+    torch.save(model.state_dict(), f"model_{epoch}.pth")
 
 plt.plot(train_losses, label="Training loss")
 plt.plot(test_losses, label="Testing loss")
@@ -120,6 +101,7 @@ plt.legend()
 # plt.plot([t / len(train_correct) for t in train_correct], label="Training accuracy")
 # plt.plot([t / len(test_correct) for t in test_correct], label="Testing accuracy")
 # plt.legend()
+
 
 y_pred = []  # make it a list (you were using y_pred earlier as a tensor)
 

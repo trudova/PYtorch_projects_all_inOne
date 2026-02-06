@@ -4,6 +4,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import DataLoader, TensorDataset
@@ -66,7 +67,7 @@ train_losses = []
 test_losses = []
 train_correct = []
 test_correct = []
-
+final_predictions = []
 for epoch in range(num_epochs):
     trn_corr = 0
     tst_corr = 0
@@ -119,3 +120,23 @@ plt.legend()
 # plt.plot([t / len(train_correct) for t in train_correct], label="Training accuracy")
 # plt.plot([t / len(test_correct) for t in test_correct], label="Testing accuracy")
 # plt.legend()
+
+y_pred = []  # make it a list (you were using y_pred earlier as a tensor)
+
+model.eval()
+with torch.no_grad():
+    for i, data in enumerate(test_data_loader):
+        inputs, labels = data
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+
+        outputs = model(inputs)  # logits on device
+        probs = torch.sigmoid(outputs)  # convert logits -> probabilities
+        predicted = (probs > 0.5).float()  # 0/1
+
+        y_pred.extend(predicted.cpu().numpy().reshape(-1).tolist())
+
+accuracy = accuracy_score(y_test_np.reshape(-1), np.array(y_pred))
+confusion = confusion_matrix(y_test_np.reshape(-1), np.array(y_pred))
+print(f"Accuracy: {accuracy}")
+print(f"Confusion Matrix:\n{confusion}")

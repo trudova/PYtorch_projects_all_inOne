@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -116,4 +117,13 @@ with torch.no_grad():
         y_pred.extend(y_val.numpy())
 
 acc = accuracy_score(y_test, y_pred)
-print("accurasy", acc)
+print("FINAL accurasy", acc)
+
+plt.plot(train_losses, label="Training loss")
+plt.plot(test_losses, label="Testing loss")
+plt.legend()
+
+plt.figure()
+plt.plot([t / len(trainset) for t in train_correct], label="Training accuracy")
+plt.plot([t / len(testset) for t in test_correct], label="Testing accuracy")
+plt.legend()

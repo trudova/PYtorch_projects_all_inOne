@@ -42,7 +42,7 @@ model = LoanClassificationNN(num_features=X_train_t.shape[1]).to(device)
 loss_fn = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
-num_epochs = 10
+num_epochs = 100
 train_losses = []
 test_losses = []
 train_correct = []
@@ -92,7 +92,7 @@ for epoch in range(num_epochs):
     print(
         f"Epoch {epoch} - Training accuracy: {trn_corr * 100 / len(X_train_np):.2f}%, Test accuracy: {tst_corr * 100 / len(X_test_np):.2f}%"
     )
-    torch.save(model.state_dict(), f"model_{epoch}.pth")
+    # torch.save(model.state_dict(), f"model_{epoch}.pth")
 
 plt.plot(train_losses, label="Training loss")
 plt.plot(test_losses, label="Testing loss")

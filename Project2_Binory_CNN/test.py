@@ -16,7 +16,7 @@ testset = torchvision.datasets.ImageFolder(root="./data/test", transform=transfo
 test_loader = DataLoader(dataset=testset, batch_size=batch_size, shuffle=True)
 
 model = ImmageClassificationNet()
-model_state_dict = torch.load("model_4.pth", weights_only=True, map_location=device)
+model_state_dict = torch.load("model_5.pth", weights_only=True, map_location=device)
 model.load_state_dict(model_state_dict)
 model = model.to(device)
 

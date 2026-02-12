@@ -19,7 +19,6 @@ testset = torchvision.datasets.ImageFolder(root="./data/test", transform=transfo
 train_loader = DataLoader(dataset=trainset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(dataset=testset, batch_size=batch_size, shuffle=True)
 
-
 model = ImmageClassificationNet()
 model = model.to(device)
 

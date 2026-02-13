@@ -1,7 +1,6 @@
 import torch
 import torchvision
 from ImageMultiClassCNN import ImageMultiClassCNN
-from sklearn.metrics import accuracy_score, confusion_matrix
 from torch.utils.data import DataLoader
 from utils.device import device_detection, gpu_load
 from utils.transformer import transform
@@ -34,12 +33,3 @@ with torch.no_grad():
 
         y_test.extend(y_test_temp.cpu().numpy().reshape(-1))
         y_pred.extend(predicted.cpu().numpy().reshape(-1))
-
-acc = accuracy_score(y_test, y_pred)
-print("FINAL accuracy", acc * 100, "%")
-
-cmx = confusion_matrix(y_test, y_pred)
-print(CLASSES)
-print(cmx)
-
-print("FINAL accuracy", acc * 100, "%")

@@ -9,19 +9,19 @@ from torch.utils.data import DataLoader
 
 transform = transforms.Compose(
     [
-        transforms.Resize((256, 256)),
-        transforms.RandomInvert(),
-        transforms.RandomRotation(10),
-        transforms.RandomVerticalFlip(),
-        transforms.RandomHorizontalFlip(),
-        transforms.CenterCrop(224),
+        # transforms.Resize((256, 256)),
+        # transforms.RandomInvert(),
+        # transforms.RandomRotation(10),
+        # transforms.RandomHorizontalFlip(),
+        # transforms.CenterCrop(128),
+        # transforms.Grayscale(num_output_channels=3),
         transforms.Resize((64, 64)),
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ]
 )
 
-batch_size = 4
+batch_size = 2
 trainset = torchvision.datasets.ImageFolder(root="./data/train", transform=transform)
 testset = torchvision.datasets.ImageFolder(root="./data/test", transform=transform)
 
@@ -63,9 +63,9 @@ class ImageMultiClassCNN(nn.Module):
 
 model = ImageMultiClassCNN()
 loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters())
+optimizer = torch.optim.Adam(model.parameters(), lr=0.0009)
 
-NUM_EPOCHS = 10
+NUM_EPOCHS = 12
 train_losses = []
 test_losses = []
 train_correct = []
@@ -93,7 +93,7 @@ for e in range(NUM_EPOCHS):
             print("Loss", loss.item())
     train_losses.append(loss.item())
     train_correct.append(trn_corr.item())
-    # torch.save(model.state_dict(), f"model_{e}.pth")
+    torch.save(model.state_dict(), f"model_{e}.pth")
 
     model.eval()
     with torch.no_grad():
@@ -144,3 +144,5 @@ print("FINAL accuracy", acc * 100, "%")
 cmx = confusion_matrix(y_test, y_pred)
 print(CLASSES)
 print(cmx)
+
+print("FINAL accuracy", acc * 100, "%")

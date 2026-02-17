@@ -6,7 +6,7 @@ from utils.transformer import transform
 device = device_detection()
 transform = transform()
 
-batch_size = 2
+batch_size = 4
 trainset = torchvision.datasets.ImageFolder(root="./data/train", transform=transform)
 testset = torchvision.datasets.ImageFolder(root="./data/test", transform=transform)
 

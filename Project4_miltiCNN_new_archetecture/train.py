@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
+import torchvision
 from Data import get_test_loader, get_testset, get_train_loader, get_trainset
 from Model import get_model
-from sklearn.metrics import accuracy_score, confusion_matrix
 from utils.Device import device_detection
 from utils.transformer import transform
 
@@ -17,14 +17,25 @@ train_loader = get_train_loader()
 test_loader = get_test_loader()
 
 CLASSES = ["affenpinscher", "akita", "corgi"]
-NUM_CLASSES = len(CLASSES)
 
-model = get_model()
+
+resnet50_model = torchvision.models.resnet50(
+    weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V1
+)
+resnet50_model.fc = torch.nn.Identity()  # remove the final classification layer
+
+resnet50_model = resnet50_model.to(device)
+
+fc_model = get_model()
+fc_model = fc_model.to(device)
+
+model = torch.nn.Sequential(resnet50_model, fc_model)
 model = model.to(device)
-loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0009)
 
-NUM_EPOCHS = 12
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(fc_model.parameters(), lr=0.0008)
+
+NUM_EPOCHS = 10
 train_losses = []
 test_losses = []
 train_correct = []
@@ -34,6 +45,7 @@ for e in range(NUM_EPOCHS):
     trn_corr = 0
     tst_corr = 0
     model.train()
+    resnet50_model.eval()
     for i, (X_train, y_train) in enumerate(train_loader):
         optimizer.zero_grad()
         # y_train = F.one_hot(y_train, num_classes=10).type(torch.float32).to(device)
@@ -51,6 +63,7 @@ for e in range(NUM_EPOCHS):
 
         if i % 100 == 0:
             print("Loss", loss.item())
+    torch.save(fc_model.state_dict(), f"fc_model_{e}.pth")
     train_losses.append(loss.item())
     train_correct.append(trn_corr.item())
     # torch.save(model.state_dict(), f"model_{e}.pth")
@@ -82,27 +95,3 @@ plt.figure()
 plt.plot([t / len(trainset) for t in train_correct], label="Training accuracy")
 plt.plot([t / len(testset) for t in test_correct], label="Testing accuracy")
 plt.legend()
-
-
-y_test = []
-y_pred = []
-
-model.eval()
-with torch.no_grad():
-    for b, (X_test, y_test_temp) in enumerate(test_loader):
-        X_test = X_test.to(device)
-        y_test_temp = y_test_temp.to(device)
-        y_val = nn.functional.softmax(model(X_test), dim=1)  # logits shape [batch, 3]
-        predicted = torch.argmax(y_val, dim=1)  # class ids shape [batch]
-
-        y_test.extend(y_test_temp.cpu().numpy().reshape(-1))
-        y_pred.extend(predicted.cpu().numpy().reshape(-1))
-
-acc = accuracy_score(y_test, y_pred)
-print("FINAL accuracy", acc * 100, "%")
-
-cmx = confusion_matrix(y_test, y_pred)
-print(CLASSES)
-print(cmx)
-
-print("FINAL accuracy", acc * 100, "%")

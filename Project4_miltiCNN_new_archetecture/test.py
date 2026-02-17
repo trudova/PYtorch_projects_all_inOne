@@ -25,7 +25,7 @@ resnet50_model = resnet50_model.to(device)
 
 
 fc_model = get_model()
-fc_state_dict = torch.load("fc_model_2.pth", weights_only=True, map_location=device)
+fc_state_dict = torch.load("fc_model_5.pth", weights_only=True, map_location=device)
 fc_model.load_state_dict(fc_state_dict)
 fc_model = fc_model.to(device)
 

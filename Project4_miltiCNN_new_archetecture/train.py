@@ -66,12 +66,10 @@ for e in range(NUM_EPOCHS):
     torch.save(fc_model.state_dict(), f"fc_model_{e}.pth")
     train_losses.append(loss.item())
     train_correct.append(trn_corr.item())
-    # torch.save(model.state_dict(), f"model_{e}.pth")
 
     model.eval()
     with torch.no_grad():
         for b, (X_test, y_test) in enumerate(test_loader):
-            # y_test = y_test.float().reshape(-1, 1)
             y_test = y_test.long()
             X_test = X_test.to(device)
             y_test = y_test.to(device)

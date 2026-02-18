@@ -20,7 +20,7 @@ train_loader = get_train_loader()
 test_loader = get_test_loader()
 
 CLASSES = ["defective", "good"]
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.0009
 
 # creating the restNet model and cleaning the last output channel
 resnet50_model = torchvision.models.resnet50(
@@ -70,7 +70,7 @@ for e in range(NUM_EPOCHS):
         trn_corr += batch_corr
         if i % 100 == 0:
             print("Loss", loss.item())
-    # torch.save(fc_model.state_dict(), f"fc_model_{e}.pth")
+    torch.save(fc_model.state_dict(), f"fc_model_{e}.pth")
     train_losses.append(loss.item())
     train_correct.append(trn_corr.item())
 

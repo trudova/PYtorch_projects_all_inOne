@@ -65,7 +65,7 @@ for e in range(NUM_EPOCHS):
         loss = loss_fc(y_output.to(device), y_train)
         loss.backward()
         optimizer.step()
-        predicted = torch.max(y_output.data, dim=1)[1]
+        predicted = torch.sigmoid(y_output) > 0.5
         batch_corr = (predicted == y_train).sum()
         trn_corr += batch_corr
         if i % 100 == 0:
@@ -81,7 +81,7 @@ for e in range(NUM_EPOCHS):
             X_test = X_test.to(device)
             y_test = y_test.to(device)
             y_val = model(X_test)
-            predicted = torch.max(y_val.data, dim=1)[1]
+            predicted = torch.sigmoid(y_val) > 0.5
             batch_corr = (predicted == y_test).sum()
             tst_corr += batch_corr
         loss = loss_fc(y_val, y_test)

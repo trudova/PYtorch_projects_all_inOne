@@ -1,8 +1,7 @@
 import numpy as np
 import torch
-import torchvision
 from Data import get_test_loader
-from Model import get_model
+from Model import get_model, get_resNet50_model
 from PIL import Image
 from utils.Device import device_detection, gpu_load
 from utils.transformer import transform
@@ -14,13 +13,7 @@ test_loader = get_test_loader()
 
 CLASSES = ["defective", "good"]
 
-resnet50_model = torchvision.models.resnet50(
-    weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V1
-)
-resnet50_model.fc = torch.nn.Identity()  # remove the final classification layer
-
-resnet50_model = resnet50_model.to(device)
-
+resnet50_model = get_resNet50_model()
 
 fc_model = get_model()
 fc_state_dict = torch.load("fc_model_5.pth", weights_only=True, map_location=device)

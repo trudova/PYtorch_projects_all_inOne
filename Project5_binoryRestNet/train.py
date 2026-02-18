@@ -1,8 +1,7 @@
 import torch
-import torchvision
 from Data import get_test_loader, get_testset, get_train_loader, get_trainset
 from matplotlib import pyplot as plt
-from Model import get_model
+from Model import get_model, get_resNet50_model
 from tqdm import tqdm
 from utils.Device import device_detection
 from utils.transformer import transform
@@ -23,10 +22,7 @@ CLASSES = ["defective", "good"]
 LEARNING_RATE = 0.0009
 
 # creating the restNet model and cleaning the last output channel
-resnet50_model = torchvision.models.resnet50(
-    weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V1
-)
-resnet50_model.fc = torch.nn.Identity()  # remove the final classification layer
+resnet50_model = get_resNet50_model()
 
 for param in resnet50_model.parameters():
     param.requires_grad = False  # freeze the pre-trained layers

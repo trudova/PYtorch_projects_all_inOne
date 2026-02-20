@@ -13,5 +13,5 @@ def device_detection():
 
 
 def gpu_load():
-    weights = torch.load("fc_model_5.pth", weights_only=True, map_location="cpu")
-    torch.save(weights, "fc_model_5.pth")
+    weights = torch.load("selected_model.pth", weights_only=True, map_location="cpu")
+    torch.save(weights, "selected_model.pth")

@@ -4,16 +4,10 @@ import torchvision.transforms as transforms
 def transform():
     transform = transforms.Compose(
         [
-            transforms.Resize((256, 256)),
-            transforms.RandomInvert(),
-            transforms.RandomRotation(10),
             transforms.RandomHorizontalFlip(),
-            transforms.ColorJitter(
-                brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1
-            ),
-            transforms.Resize((224, 224)),
+            transforms.Resize((120, 120)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
         ]
     )
     return transform

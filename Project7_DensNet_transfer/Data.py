@@ -1,10 +1,10 @@
 import torchvision
 from torch.utils.data import DataLoader
 from utils.Device import device_detection
-from utils.transformer import transform
+from utils.transformer import get_transform
 
 device = device_detection()
-transform = transform()
+transform = get_transform()
 
 batch_size = 16
 trainset = torchvision.datasets.ImageFolder(root="./data/train", transform=transform)

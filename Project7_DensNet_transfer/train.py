@@ -19,13 +19,6 @@ train_loader = get_train_loader()
 test_loader = get_test_loader()
 
 
-def imshow(image_torch):
-    # flip image channels to RGB
-    image_torch = image_torch.numpy().transpose((1, 2, 0))
-    plt.figure()
-    plt.imshow(image_torch)
-
-
 CLASSES = ["cat", "dog"]
 LEARNING_RATE = 0.0005
 
@@ -88,7 +81,6 @@ for e in range(NUM_EPOCHS):
     print(
         f"Epoch {e} - Training accuracy: {trn_corr.item() * 100 / len(trainset):.2f}%, Test accuracy: {tst_corr.item() * 100 / len(testset):.2f}%"
     )
-
 
 plt.plot(train_losses, label="Training loss")
 plt.plot(test_losses, label="Testing loss")

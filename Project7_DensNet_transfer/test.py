@@ -1,4 +1,3 @@
-import numpy as np
 import seaborn as sns
 import torch
 from Data import get_test_loader
@@ -6,14 +5,12 @@ from matplotlib import pyplot as plt
 from Model import get_densNet_model
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
 from utils.Device import device_detection, gpu_load
-from utils.transformer import get_transform
 
 CLASSES = ["cat", "dog"]
 NUM_CLASSES = len(CLASSES)
 
 gpu_load()
 device = device_detection()
-transform = get_transform()
 
 device = device_detection()
 model = get_densNet_model()
@@ -37,13 +34,6 @@ with torch.no_grad():
         predicted = torch.sigmoid(y_val) > 0.5
         y_test.extend(y_test_temp.cpu().numpy().reshape(-1))
         y_pred.extend(predicted.cpu().numpy().reshape(-1))
-    for num, sample in enumerate(X_test):
-        plt.subplot(4, 6, num + 1)
-        plt.title(class_labels[y_pred[num]])
-        plt.axis("off")
-        sample = sample.cpu().numpy()
-        plt.imshow(np.transpose(sample, (1, 2, 0)))
-
 
 acc = accuracy_score(y_test, y_pred)
 print(f"accuracy is {acc * 100}%")

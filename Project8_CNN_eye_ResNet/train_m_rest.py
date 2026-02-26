@@ -24,8 +24,7 @@ CLASSES = [
     "Patch_ge_1mm",
 ]
 
-LR = 0.0007
-
+LR = 0.0009
 # resnet50_model = torchvision.models.resnet50(
 #     weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
 # )
@@ -47,7 +46,7 @@ model = model.to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(fc_model.parameters(), lr=LR)
 
-NUM_EPOCHS = 10
+NUM_EPOCHS = 100
 train_losses = []
 test_losses = []
 train_correct = []
@@ -65,8 +64,8 @@ for e in range(NUM_EPOCHS):
         X_train = X_train.to(device)
         y_train = y_train.to(device)
         y_output = model(X_train)
-        test_loss = loss_fn(y_output, y_train)
-        test_loss.backward()
+        train_loss = loss_fn(y_output, y_train)
+        train_loss.backward()
         optimizer.step()
 
         predicted = torch.max(y_output.data, dim=1)[1]
@@ -74,11 +73,11 @@ for e in range(NUM_EPOCHS):
         trn_corr += batch_corr
 
         if i % 100 == 0:
-            print(f"TRAIN Loss {test_loss.item()}")
+            print(f"TRAIN Loss {train_loss.item()}")
 
     # torch.save(fc_model.state_dict(), f"fc_model_{e}.pth")
 
-    train_losses.append(test_loss.item())
+    train_losses.append(train_loss.item())
     train_correct.append(trn_corr.item())
 
     model.eval()
@@ -95,7 +94,11 @@ for e in range(NUM_EPOCHS):
         print(f"TESTING LOSS {test_loss.item()}")
         test_losses.append(test_loss.item())
         test_correct.append(tst_corr.item())
+    acc = tst_corr.item() * 100 / len(get_testset())
 
+    if test_loss.item() < 0.009 and train_loss.item() < 0.009 and acc > 78:
+        print(f"Saving model at epoch {e} with accuracy {acc:.2f}%")
+        torch.save(model.state_dict(), f"model_{e}_{acc:.2f}.pth")
     print(
         f"Epoch {e} - Training accuracy: {trn_corr.item() * 100 / len(trainset):.2f}%, Test accuracy: {tst_corr.item() * 100 / len(testset):.2f}%"
     )

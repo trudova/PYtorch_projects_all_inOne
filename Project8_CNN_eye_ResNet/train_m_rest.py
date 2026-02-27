@@ -16,37 +16,29 @@ testset = get_testset()
 train_loader = get_train_loader()
 test_loader = get_test_loader()
 
-CLASSES = [
-    "No_ulcer_of_the_corneal_epithelium",
-    "Micro_punctate",
-    "Macro_punctate",
-    "Coalescent_macro_punctate",
-    "Patch_ge_1mm",
-]
 
-LR = 0.0009
+LR = 0.0007
 # resnet50_model = torchvision.models.resnet50(
 #     weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
 # )
-resnet50_model = torchvision.models.resnet152(
+resnet152_model = torchvision.models.resnet152(
     weights=torchvision.models.ResNet152_Weights.IMAGENET1K_V1
 )
 
-resnet50_model.fc = torch.nn.Identity()  # remove the final classification layer
-
-resnet50_model = resnet50_model.to(device)
+resnet152_model.fc = torch.nn.Identity()  # remove the final classification layer
+resnet152_model = resnet152_model.to(device)
 
 fc_model = get_model()
 fc_model = fc_model.to(device)
 
 
-model = torch.nn.Sequential(resnet50_model, fc_model)
+model = torch.nn.Sequential(resnet152_model, fc_model)
 model = model.to(device)
 
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(fc_model.parameters(), lr=LR)
 
-NUM_EPOCHS = 100
+NUM_EPOCHS = 50
 train_losses = []
 test_losses = []
 train_correct = []
@@ -56,7 +48,7 @@ for e in range(NUM_EPOCHS):
     trn_corr = 0
     tst_corr = 0
     model.train()
-    resnet50_model.eval()
+    resnet152_model.eval()
     for i, (X_train, y_train) in enumerate(train_loader):
         optimizer.zero_grad()
         # y_train = F.one_hot(y_train, num_classes=10).type(torch.float32).to(device)
@@ -94,11 +86,12 @@ for e in range(NUM_EPOCHS):
         print(f"TESTING LOSS {test_loss.item()}")
         test_losses.append(test_loss.item())
         test_correct.append(tst_corr.item())
-    acc = tst_corr.item() * 100 / len(get_testset())
 
-    if test_loss.item() < 0.009 and train_loss.item() < 0.009 and acc > 78:
+    acc = tst_corr.item() * 100 / len(get_testset())
+    if (test_loss.item() < 0.4 and train_loss.item() < 0.5) and acc > 82:
         print(f"Saving model at epoch {e} with accuracy {acc:.2f}%")
-        torch.save(model.state_dict(), f"model_{e}_{acc:.2f}.pth")
+        acc = tst_corr.item() * 100 / len(get_testset())
+        torch.save(fc_model.state_dict(), f"model_{e}_{acc:.2f}.pth")
     print(
         f"Epoch {e} - Training accuracy: {trn_corr.item() * 100 / len(trainset):.2f}%, Test accuracy: {tst_corr.item() * 100 / len(testset):.2f}%"
     )

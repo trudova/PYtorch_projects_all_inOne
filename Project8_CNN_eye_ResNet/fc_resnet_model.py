@@ -28,6 +28,6 @@ def get_model():
         nn.BatchNorm1d(64),
         nn.ReLU(),
         nn.Dropout(0.3),
-        nn.Linear(64, 5),
+        nn.Linear(64, 3),
     )
     return model.to(device)

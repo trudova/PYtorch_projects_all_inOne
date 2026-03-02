@@ -1,0 +1,33 @@
+import torchvision
+from torch.utils.data import DataLoader
+from utils.Device import device_detection
+from utils.transformer import get_transform
+
+device = device_detection()
+transform = get_transform()
+
+batch_size = 16
+trainset = torchvision.datasets.ImageFolder(root="./train", transform=transform)
+testset = torchvision.datasets.ImageFolder(root="./test", transform=transform)
+
+
+def get_trainset():
+    return trainset
+
+
+def get_testset():
+    return testset
+
+
+def get_train_loader():
+    train_loader = DataLoader(
+        dataset=trainset, batch_size=batch_size, shuffle=True, pin_memory_device=device
+    )
+    return train_loader
+
+
+def get_test_loader():
+    test_loader = DataLoader(
+        dataset=testset, batch_size=batch_size, shuffle=True, pin_memory_device=device
+    )
+    return test_loader

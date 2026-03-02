@@ -17,7 +17,7 @@ train_loader = get_train_loader()
 test_loader = get_test_loader()
 
 
-LR = 0.0007
+LR = 0.0008
 # resnet50_model = torchvision.models.resnet50(
 #     weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
 # )
@@ -88,7 +88,7 @@ for e in range(NUM_EPOCHS):
         test_correct.append(tst_corr.item())
 
     acc = tst_corr.item() * 100 / len(get_testset())
-    if (test_loss.item() < 0.4 and train_loss.item() < 0.5) and acc > 82:
+    if (test_loss.item() < 0.4 and train_loss.item() < 0.5) and acc > 78:
         print(f"Saving model at epoch {e} with accuracy {acc:.2f}%")
         acc = tst_corr.item() * 100 / len(get_testset())
         torch.save(fc_model.state_dict(), f"model_{e}_{acc:.2f}.pth")

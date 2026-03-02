@@ -9,8 +9,10 @@ from utils.Device import device_detection, gpu_load
 from utils.transformer import transform
 
 CLASSES = [
+    "No_ulcer_of_the_corneal_epithelium",
     "Micro_punctate",
     "Macro_punctate",
+    "Coalescent_macro_punctate",
     "Patch_ge_1mm",
 ]
 NUM_CLASSES = len(CLASSES)

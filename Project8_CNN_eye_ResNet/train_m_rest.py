@@ -17,7 +17,7 @@ train_loader = get_train_loader()
 test_loader = get_test_loader()
 
 
-LR = 0.0008
+LR = 0.0005
 # resnet50_model = torchvision.models.resnet50(
 #     weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
 # )

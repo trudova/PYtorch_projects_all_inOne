@@ -13,7 +13,7 @@ CLASSES = [
     "Micro_punctate",
     "Macro_punctate",
     "Coalescent_macro_punctate",
-    "Patch_ge_1mm",
+    # "Patch_ge_1mm",
 ]
 NUM_CLASSES = len(CLASSES)
 

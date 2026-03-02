@@ -73,7 +73,7 @@ for e in range(NUM_EPOCHS):
         print(f"TESTING LOSS {test_loss.item()}")
     acc = tst_corr.item() * 100 / len(get_testset())
 
-    if test_loss.item() < 0.5 and loss.item() < 0.5 and acc > 76:
+    if (test_loss.item() < 0.6 and loss.item() < 0.6) or acc > 78.5:
         acc = tst_corr.item() * 100 / len(get_testset())
         torch.save(model.state_dict(), f"model_{e}_{acc:.2f}.pth")
     print(

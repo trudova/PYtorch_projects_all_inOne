@@ -6,7 +6,7 @@ from utils.transformer import transform
 device = device_detection()
 transform = transform()
 
-batch_size = 16
+batch_size = 8
 trainset = torchvision.datasets.ImageFolder(root="./train", transform=transform)
 testset = torchvision.datasets.ImageFolder(root="./test", transform=transform)
 
@@ -24,7 +24,7 @@ def get_train_loader():
         dataset=trainset,
         batch_size=batch_size,
         shuffle=True,
-        drop_last=True,
+        # drop_last=True,
         pin_memory_device=device,
     )
     return train_loader

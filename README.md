@@ -336,12 +336,12 @@ Python · PyTorch · NumPy · Scikit-learn · Matplotlib · Seaborn
 - Near-zero loss convergence
 - 
 <p align="center">
-  <img src="acc.png" width="45%"/>
-  <img src="loss.png" width="45%"/>
+  <img src="Project10_eye_cuastom/acc.png" width="45%"/>
+  <img src="Project10_eye_cuastom/loss.png" width="45%"/>
 </p>
 
 <p align="center">
-  <img src="CM_eye.png" width="60%"/>
+  <img src="Project10_eye_cuastom/CM_eye.png" width="60%"/>
 </p>
 
 ## Goal

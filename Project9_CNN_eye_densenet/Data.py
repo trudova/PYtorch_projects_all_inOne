@@ -21,7 +21,11 @@ def get_testset():
 
 def get_train_loader():
     train_loader = DataLoader(
-        dataset=trainset, batch_size=batch_size, shuffle=True, pin_memory_device=device
+        dataset=trainset,
+        batch_size=batch_size,
+        shuffle=True,
+        drop_last=True,
+        pin_memory_device=device,
     )
     return train_loader
 

@@ -17,7 +17,7 @@ train_loader = get_train_loader()
 test_loader = get_test_loader()
 
 
-LR = 0.0005
+LR = 0.0008
 # resnet50_model = torchvision.models.resnet50(
 #     weights=torchvision.models.ResNet50_Weights.IMAGENET1K_V2
 # )
@@ -38,7 +38,7 @@ model = model.to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(fc_model.parameters(), lr=LR)
 
-NUM_EPOCHS = 50
+NUM_EPOCHS = 40
 train_losses = []
 test_losses = []
 train_correct = []
@@ -92,6 +92,10 @@ for e in range(NUM_EPOCHS):
         print(f"Saving model at epoch {e} with accuracy {acc:.2f}%")
         acc = tst_corr.item() * 100 / len(get_testset())
         torch.save(fc_model.state_dict(), f"model_{e}_{acc:.2f}.pth")
+    else:
+        if acc > 79:
+            torch.save(fc_model.state_dict(), f"model_{e}_{acc:.2f}.pth")
+
     print(
         f"Epoch {e} - Training accuracy: {trn_corr.item() * 100 / len(trainset):.2f}%, Test accuracy: {tst_corr.item() * 100 / len(testset):.2f}%"
     )

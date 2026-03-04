@@ -28,7 +28,7 @@ model.to(device)
 loss_fc = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.classifier.parameters(), lr=LEARNING_RATE)
 
-NUM_EPOCHS = 20
+NUM_EPOCHS = 40
 
 train_losses = []
 test_losses = []
